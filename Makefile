@@ -1,39 +1,47 @@
-include config.mk
+#
+# Makefile
+#
 
-ifneq ($(shell uname -s),Darwin)
-  LDLIBS = -L/usr/local/lib -lm
-else
-  LIBFTDI_NAME = $(shell $(PKG_CONFIG) --exists libftdi1 && echo ftdi1 || echo ftdi)
-  LDLIBS = -L/usr/local/lib -l$(LIBFTDI_NAME) -lm
-endif
+CC ?= gcc
+CXX ?= g++
+STRIP ?= strip
 
-ifeq ($(STATIC),1)
-LDFLAGS += -static
-LDLIBS += $(shell for pkg in libftdi1 libftdi; do $(PKG_CONFIG) --silence-errors --static --libs $$pkg && exit; done; echo -lftdi; )
-CFLAGS += $(shell for pkg in libftdi1 libftdi; do $(PKG_CONFIG) --silence-errors --static --cflags $$pkg && exit; done; )
-else
-LDLIBS += $(shell for pkg in libftdi1 libftdi; do $(PKG_CONFIG) --silence-errors --libs $$pkg && exit; done; echo -lftdi; )
-CFLAGS += $(shell for pkg in libftdi1 libftdi; do $(PKG_CONFIG) --silence-errors --cflags $$pkg && exit; done; )
-endif
+INCLUDEDIRS  = -I ./
+INCLUDEDIRS  = -I /usr/include/libftdi1
 
-all: ftdiflash$(EXE)
+CFLAGS += -Wall
+CFLAGS += -std=c++11
+CFLAGS += -O2
+CFLAGS += $(INCLUDEDIRS)
+#define NDEBUG to disable assert()
+CFLAGS += -DNDEBUG
 
-ftdiflash$(EXE): ftdiflash.o
-	$(CC) -o $@ $(LDFLAGS) $^ $(LDLIBS)
+CXXFLAGS += $(CFLAGS)
 
-install: all
-	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	cp ftdiflash $(DESTDIR)$(PREFIX)/bin/ftdiflash
+LIBDIRS  = -L.
+#LIBDIRS += -L$(STARGE_LIBRARY)
 
-uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/bin/ftdiflash
+LIBS  =
+LIBS += -ldl
+LIBS += -lftdi1
+LIBS += -lusb-1.0
+LIBS += -lm -lrt -lpthread
+
+OBJS = ftdiflash.o ftdispi.o
+
+all: ftdiflash
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+ftdiflash: $(OBJS)
+	$(CXX) -o $@ $^ $(LIBDIRS) $(LIBS)
+	$(STRIP) ftdiflash
 
 clean:
-	rm -f ftdiflash
-	rm -f ftdiflash.exe
-	rm -f *.o *.d
-
--include *.d
-
-.PHONY: all install uninstall clean
-
+	rm -rf *.o
+	rm -rf *.d
+	rm -rf ftdiflash
