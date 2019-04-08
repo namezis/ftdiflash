@@ -78,7 +78,7 @@ void help(const char *progname)
 	fprintf(stderr, "        do not write flash, only verify (check)\n");
 	fprintf(stderr, "\n");
 	fprintf(stderr, "    -b\n");
-	fprintf(stderr, "        bulk erase entire flash before writing\n");
+	fprintf(stderr, "        Do not use bulk erase flash before writing\n");
 	fprintf(stderr, "\n");
 	fprintf(stderr, "    -n\n");
 	fprintf(stderr, "        do not erase flash before writing\n");
@@ -110,7 +110,7 @@ int main(int argc, char **argv)
 	bool verbose = false;
 	bool read_mode = false;
 	bool check_mode = false;
-	bool bulk_erase = false;
+	bool bulk_erase = true;
 	bool dont_erase = false;
 	bool prog_sram = false;
 	bool test_mode = false;
@@ -152,7 +152,7 @@ int main(int argc, char **argv)
 			check_mode = true;
 			break;
 		case 'b':
-			bulk_erase = true;
+			bulk_erase = false;
 			break;
 		case 'n':
 			dont_erase = true;

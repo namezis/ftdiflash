@@ -12,7 +12,7 @@
 
 #include "utils.h"
 
-#define DEFAULT_DIVISOR 12
+#define DEFAULT_DIVISOR 18
 
 #define DATA_OUT(n) 0x11, \
 		    (uint8_t)(n-1), \

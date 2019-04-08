@@ -6,6 +6,8 @@ CC ?= gcc
 CXX ?= g++
 STRIP ?= strip
 
+PREFIX = /usr/local
+
 INCLUDEDIRS  = -I ./
 INCLUDEDIRS  = -I /usr/include/libftdi1
 
@@ -40,6 +42,15 @@ all: ftdiflash
 ftdiflash: $(OBJS)
 	$(CXX) -o $@ $^ $(LIBDIRS) $(LIBS)
 	$(STRIP) ftdiflash
+
+.PHONY: install
+install: ftdiflash
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	cp $< $(DESTDIR)$(PREFIX)/bin/ftdiflash
+
+.PHONY: uninstall
+uninstall:
+	rm -f $(DESTDIR)$(PREFIX)/bin/ftdiflash
 
 clean:
 	rm -rf *.o

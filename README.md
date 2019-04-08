@@ -1,4 +1,5 @@
 # ftdiflash
+
 SPI flash programmer for use with FTDI USB devices
 
 The interfacing to the SPI bus has been optimized to achieve better performance.
