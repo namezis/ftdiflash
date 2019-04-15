@@ -100,6 +100,13 @@ void ftdispi::open(enum ftdi_interface ifnum, const char *devstr)
 	    result << ", " << ftdi_get_error_string(m_ftdi));
     }
 
+
+/* 
+   The following code is commented because at the time of writing Ubuntu has still distributed headers with the 
+   wrong implementation to flush the buffers. Refer to libftdi source for more details. Uncomment when needed.
+*/
+
+/*
     result = ftdi_tciflush(m_ftdi);
     if (result < 0)
     {
@@ -113,6 +120,7 @@ void ftdispi::open(enum ftdi_interface ifnum, const char *devstr)
 	throw std::runtime_error(Formatter() << "Failed to purge write buffers on FTDI USB device. Error: " << 
 	    result << ", " << ftdi_get_error_string(m_ftdi));
     }
+*/
 
     result = ftdi_get_latency_timer(m_ftdi, &m_ftdi_latency);
     if (result < 0)

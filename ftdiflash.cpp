@@ -454,6 +454,8 @@ int main(int argc, char **argv)
 	catch (std::exception& e)
 	{
 	    std::cout << std::endl << "Exception: " << e.what() << std::endl;
+	    std::cout << std::endl << "Make sure target board is ready to use e.g. watchdog is switched off, power is enabled." << std::endl;
+	    result = 1;
         }
     
 	return result;
