@@ -1,0 +1,17 @@
+# BASED ON 99-jlink.rules provided by SEGGER
+# This file is going to be stored at /etc/udev/rules.d on installation of MST Production Suite
+# It makes sure that non-superuser have access to the connected FTDI FT2232 USB Flashers, so ftdiflash can be executed as non-superuser
+#
+#
+# Matches are AND combined, meaning: a==b,c==d,do stuff
+# results in:                        if (a == b) && (c == d) -> do stuff
+#
+# ID 0403:6010 Future Technology Devices International, Ltd FT2232C Dual USB-UART/FIFO IC
+ACTION!="add", SUBSYSTEM!="usb_device", GOTO="ftdi_rules_end"
+#
+# Give all users read and write access.
+ATTR{idProduct}=="6010", ATTR{idVendor}=="0403", MODE="666"
+#
+# End of list
+#
+LABEL="ftdi_rules_end"
